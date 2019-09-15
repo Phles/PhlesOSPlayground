@@ -24,7 +24,7 @@ public:
         }
     }
 };
-//OS Kernel main
+//OS Kernel main. Extern C is used to avoid name mangling.
 extern "C" void kernelMain(void* multiboot,unsigned int magicNo){
    VideoMemoryStream cout;
     cout << "Your OS has been replaced by a bad C++ program! ";
