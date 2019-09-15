@@ -1,4 +1,4 @@
-
+//Class to interface with screen
 class VideoMemoryStream{
 public:
     //Beginning of Video Memory
@@ -29,5 +29,6 @@ extern "C" void kernelMain(void* multiboot,unsigned int magicNo){
    VideoMemoryStream cout;
     cout << "Your OS has been replaced by a bad C++ program! ";
     cout << "Getting multiboot info";
+    //Loop forever, preventing unknown behavior.
     while(1);
 }
