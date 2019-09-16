@@ -14,7 +14,15 @@ ASPARAMS = --32
 LDPARAMS = -m elf_i386
 #Object files to make
 objects = loader.o kernel.o
-
+#Static libraries to make
+libs = Video.lib Memory.lib
+#Make other modules, ensuring they are up to date
+.PHONY:
+	cd ./Video && $(MAKE) ../Video.lib
+	cd ./Memory && $(MAKE) ../Memory.lib
+#Other modules that rely on phony
+Video.lib: .PHONY
+Memory.lib: .PHONY	
 #Make objects from .cpp(c++) file
 %.o: %.cpp
 	g++  $(GPPPARAMS) -o $@  -c $<
@@ -23,8 +31,8 @@ objects = loader.o kernel.o
 	as $(ASPARAMS) -o $@ $<
 
 #The binary that holds the kernel, $< is linker.ld and $@ is phleskernel.bin
-phleskernel.bin: linker.ld $(objects)
-	ld  $(LDPARAMS) -T $< -o  $@ $(objects)
+phleskernel.bin: linker.ld $(objects) $(libs)
+	ld  $(LDPARAMS) -T $< -o  $@ $(objects) $(libs)
 
 #Copy the OS kernel to the boot folder for GRUB on this device
 install: phleskernel.bin
@@ -35,10 +43,19 @@ installAll: phleskernel.bin
 	sudo mount /dev/sdb1 ../mount
 	sudo cp $< ../mount/boot/phleskernel.bin
 	sudo umount ../mount
+
 #Run the OS using qemu on the secondary drive
 run: installAll
 	 sudo qemu-system-i386 -snapshot /dev/sdb
 #Run the OS using qemu on the secondary drive but ensure qemu stops execution and waits for a remote gdb debugger
 debug:
 	 sudo qemu-system-i386 -snapshot /dev/sdb -s -S
-
+#Remove object and bin files, continuing if a file was not found
+clean:
+	rm $(libs) || true
+	rm $(objects) || true
+	rm phleskernel.bin || true
+	#clean sub modules
+	cd ./Video && $(MAKE) clean || true
+	cd ./Memory && $(MAKE) clean || true
+	
