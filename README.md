@@ -8,7 +8,7 @@ Lookup _menuentry_ in configuring GRUB(grub.cfg) for more details.
 ### Overview of Make Commands:
 _make install_ : Builds the OS binary(phleskernel.bin) and places it in /boot directory
 
-_make installAll_: Builds the OS binary and places it both in /boot and in the same directory on partition 1 of sdb(/dev/sdb1). It assumes a directory named mount is one folder above the OS folder.
+_make installAll_: Builds the OS binary and places it both in /boot and in the same directory on partition 1 of sdb(/dev/sdb1). It assumes a directory named mount is one folder above the project folder.
 
 _make run_: runs qemu using the /dev/sdb drive
 
