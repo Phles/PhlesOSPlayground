@@ -16,5 +16,5 @@ public:
     //Print a single character
     VideoMemoryStream& operator<<(char let);
     //Print a numeric value as a string
-    VideoMemoryStream& operator<<(unsigned int num);
+    VideoMemoryStream& operator<<(int num);
 };

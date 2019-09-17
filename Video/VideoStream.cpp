@@ -7,7 +7,10 @@ VideoMemoryStream::VideoMemoryStream():VideoMemBegin((unsigned short*)0xb8000),c
 }
 //Print string
 VideoMemoryStream& VideoMemoryStream::operator<<(const char *str){
-    for(int i = 0; str[i] != '\0'; i++){
+        for(int i = 0; str[i] != '\0'; i++){
+            if(str[i] == '\n'){
+               // VideoMemPtr += 0x70 - (int)VideoMemPtr%0x70;
+            }
         //Each short represennts a color and a letter, combine the current color with the current letter
         VideoMemPtr[0] = (VideoMemPtr[0] & (color<<8)) | str[i];
         //Go to the next memory address
@@ -29,7 +32,7 @@ VideoMemoryStream& VideoMemoryStream::operator<<(char let){
     return *this;
 }
 //Print a numeric value as a string
-VideoMemoryStream& VideoMemoryStream::operator<<(unsigned int num){
+VideoMemoryStream& VideoMemoryStream::operator<<(int num){
     int pow = 1;
     //Find the highest power of ten for this number
     for(int tmp = num; tmp > 10;pow*=10)tmp /= 10;

@@ -36,7 +36,7 @@ SECTIONS{
     {
         *(.bss)
     }
-
+    
     /*Everything else we don't care about can just be thrown away*/
     /DISCARD/ :
     {
