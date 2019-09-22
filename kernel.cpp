@@ -4,13 +4,26 @@
 //OS Kernel main. Extern C is used to avoid name mangling.
 extern "C" void kernelMain(unsigned int* multiboot,unsigned int magicNo){
    VideoMemoryStream cout;
-    cout << "Your OS has been replaced by a bad C++ program!\n";
+    cout << "Your OS has been replaced by a bad C++ program!\r\n";
     cout  << "Getting multiboot info: Flags: " << (int)multiboot[0]<<"\n"; 
+    cout.numericBase = 16;
     MultibootData mbData(multiboot);
-    cout.VideoMemPtr += 10;
+    //Memory Info
     cout << "Mem Flag"<< mbData.MemFlags;
     cout << "\nLower Mem" << mbData.lowerMem;
     cout << "\nUpper Mem" << mbData.upperMem;
+    //Boot info
+    cout << "Boot Device Found:" << mbData.bootFlag;
+    cout << "Boot Device " << mbData.bootDevice;
+    //BIOS MEM Map
+    cout << " BIOS MemMap:" <<mbData.biosMapFlag;
+    cout <<"BIOS MemMap Length:"<<mbData.biosMemMapLen;
+    cout <<"BIOS MemMap Addr:" << (int)mbData.biosMemMapAddr;
+    //VBE Info
+    cout << "VBE Enabled "<<mbData.vbeFlag;
+    cout<<"VBE Control Addr"<<(int)mbData.vbeControlInfo;
+    cout <<"VBE Control Signature: "<<(char*)mbData.vbeControlInfo;
     //Loop forever, preventing unknown behavior.
-    while(1);
+    //loader.s currently enters a halt loop, which is less cpu intensive but has the same functionality.
+    //while(1);
 }

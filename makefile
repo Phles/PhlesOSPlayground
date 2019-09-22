@@ -16,6 +16,15 @@ LDPARAMS = -m elf_i386
 objects = loader.o kernel.o
 #Static libraries to make
 libs = Video.lib Memory.lib
+###### Settings to change depending on user
+
+#RAM allocated to qemu emulator M = megabytes, G = gigabytes
+RAM = 2G
+#Hard drive to send to the emulator
+DISK = /dev/sdb
+#Partition to install OS on
+PARTITION = /dev/sdb1
+######
 #Make other modules, ensuring they are up to date
 .PHONY:
 	cd ./Video && $(MAKE) ../Video.lib
@@ -40,16 +49,16 @@ install: phleskernel.bin
 #Copy the OS kernel to the boot folder for GRUB on this device and on the first partition of a secondary drive, mounted at a folder one level above this folder
 installAll: phleskernel.bin
 	sudo cp $< /boot/phleskernel.bin
-	sudo mount /dev/sdb1 ../mount
+	sudo mount $(PARTITION) ../mount
 	sudo cp $< ../mount/boot/phleskernel.bin
 	sudo umount ../mount
 
 #Run the OS using qemu on the secondary drive
 run: installAll
-	 sudo qemu-system-i386 -snapshot /dev/sdb
+	 sudo qemu-system-i386 -snapshot $(DISK) -m $(RAM)
 #Run the OS using qemu on the secondary drive but ensure qemu stops execution and waits for a remote gdb debugger
 debug:
-	 sudo qemu-system-i386 -snapshot /dev/sdb -s -S
+	 sudo qemu-system-i386 -snapshot $(DISK) -s -S -m $(RAM)
 #Remove object and bin files, continuing if a file was not found
 clean:
 	rm $(libs) || true

@@ -1,7 +1,7 @@
 //Implementation class to interface with screen
 #include "VideoStream.hpp"
 //Constructor
-VideoMemoryStream::VideoMemoryStream():VideoMemBegin((unsigned short*)0xb8000),color(0x0A){
+VideoMemoryStream::VideoMemoryStream():VideoMemBegin((unsigned short*)0xb8000),color(0x0A),numericBase(10){
     //Set stream pointer to the starting address of Video Memory
     VideoMemPtr = VideoMemBegin;
 }
@@ -34,16 +34,22 @@ VideoMemoryStream& VideoMemoryStream::operator<<(char let){
 //Print a numeric value as a string
 VideoMemoryStream& VideoMemoryStream::operator<<(int num){
     int pow = 1;
-    //Find the highest power of ten for this number
-    for(int tmp = num; tmp > 10;pow*=10)tmp /= 10;
+    //Find the highest power of the base for this number
+    for(int tmp = num; tmp > numericBase;pow*=numericBase)tmp /= numericBase;
     int digit;
     //Iterate through digits
     do{
-        digit = num / pow % 10;
-        //Ascii 0-9 offset
-        char let = digit + '0';
-        *this << let;
-        pow /= 10;
+        digit = num / pow % numericBase;
+        if(digit < 10){
+            //Ascii 0-9 offset
+            char let = digit + '0';
+            *this << let;
+        }else{
+            //Bases above 10 use A as 10
+            char let = 'A'+digit-10;
+            *this << let;
+        }
+        pow /= numericBase;
 
     }while(pow > 0);
     return *this;
