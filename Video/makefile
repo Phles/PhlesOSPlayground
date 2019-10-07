@@ -10,7 +10,7 @@ Video:
 ## -g: provide gdb debug information. This increases the size of the binary but allows gdb debugging
 GPPPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -g
 #object files to make into a single library file
-objects = VideoStream.o
+objects = VideoStream.o VideoMode.o
 %.o: %.cpp
 	g++  $(GPPPARAMS) -o $@  -c $<
 #Archive objects into a static lib

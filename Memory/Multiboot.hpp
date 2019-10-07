@@ -16,6 +16,7 @@
 #define MB_HARDDISK 0
 
 #define MB_VBE 1
+#define MB_FRAMEBUF 1
 struct MultibootData{
     //Memory Information
     #if MB_MEMORYREGIONS
@@ -55,6 +56,17 @@ struct MultibootData{
    #if MB_VBE
     bool vbeFlag;
     int *vbeControlInfo;
+    #endif
+    #if MB_FRAMEBUF
+    bool frameBufferFlag;
+    int* frameBuffAddr;
+    int frameBuffPitch;
+    int frameBuffWidth;
+    int frameBuffHeight;
+    int frameBuffBpp;
+    char frameBuffType;
+    char* colorInfo;
+
     #endif
     //Extract info from the location in Memory
     MultibootData(unsigned int* multibootPtr);

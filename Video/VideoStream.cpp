@@ -1,15 +1,21 @@
 //Implementation class to interface with screen
 #include "VideoStream.hpp"
 //Constructor
-VideoMemoryStream::VideoMemoryStream():VideoMemBegin((unsigned short*)0xb8000),color(0x0A),numericBase(10){
+VideoMemoryStream::VideoMemoryStream():VideoMemBegin((unsigned short*)0xb8000),color(0x0A),numericBase(10),screenProperties(nullptr){
     //Set stream pointer to the starting address of Video Memory
     VideoMemPtr = VideoMemBegin;
 }
 //Print string
 VideoMemoryStream& VideoMemoryStream::operator<<(const char *str){
+        //allow escape sequences.
+        bool escapes = screenProperties != nullptr;
         for(int i = 0; str[i] != '\0'; i++){
-            if(str[i] == '\n'){
-               // VideoMemPtr += 0x70 - (int)VideoMemPtr%0x70;
+            if(str[i] == '\n' && screenProperties != nullptr){
+                //int offset = (int)VideoMemPtr %((int)VideoMemBegin+screenProperties->frameWidth) == 0;
+                //if((int)VideoMemPtr % offset == 0)VideoMemPtr++;
+                int offset = 80;
+                while((int)VideoMemPtr %offset!= 0)VideoMemPtr++;
+                
             }
         //Each short represennts a color and a letter, combine the current color with the current letter
         VideoMemPtr[0] = (VideoMemPtr[0] & (color<<8)) | str[i];

@@ -1,3 +1,7 @@
+#include "VideoMode.hpp"
+#ifndef VIDEOSTREAM
+#define VIDEOSTREAM
+
 //Class to interface with screen
 class VideoMemoryStream{
 public:
@@ -11,8 +15,14 @@ public:
     int numericBase;
     //Video Text Mode Color information
     short color;
-    //Constructor
+    
+    //Pointer to information about the screen, if nonnull than escape sequences will be enabled.
+    ScreenProperties* screenProperties;
+
+    //Constructor with no information about the screen
     VideoMemoryStream();
+    //Constructor with a full set of frame buffer information
+    VideoMemoryStream(const ScreenProperties& props);
     //Print string
     VideoMemoryStream& operator<<(const char *str);
     //Print a single character
@@ -20,3 +30,4 @@ public:
     //Print a numeric value as a string
     VideoMemoryStream& operator<<(int num);
 };
+#endif

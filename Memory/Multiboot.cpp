@@ -48,7 +48,18 @@ MultibootData::MultibootData(unsigned int* multibootPtr){
 
     //72-86,VBE Info (VESA BIOS Extensions)
     #if MB_VBE
-    vbeFlag = getBit(multibootPtr[0],12);
+    vbeFlag = getBit(multibootPtr[0],11);
     vbeControlInfo = (int*)multibootPtr[18];
+    #endif
+    //88-115, FrameBuffer Info
+    #if MB_FRAMEBUF
+    frameBufferFlag = getBit(multibootPtr[0],12);
+    frameBuffAddr = (int*)multibootPtr[22];
+    frameBuffPitch = multibootPtr[24];
+    frameBuffWidth = multibootPtr[25];
+    frameBuffHeight = multibootPtr[26];
+    frameBuffBpp = multibootPtr[27]; 
+    frameBuffType = ((char*)(multibootPtr))[109];
+    colorInfo = &(((char*)(multibootPtr))[110]);
     #endif
 }
